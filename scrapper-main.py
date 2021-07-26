@@ -59,13 +59,17 @@ for key, link in resolution_link_df[["Resolution Page"]].iterrows():
     response = requests.get(url)
     rule = BeautifulSoup(response.text, "html.parser")
     try:
-        resolution = rule.select("#sub-header > div > div > div > div.box.text > p:nth-child(3)")[0].get_text().strip()
+        resolution = rule.select("#sub-header > div > div > div > div.pt-5.font-thin.font-interstate.text-tm-gray-5 > "
+                                 "p:nth-child(3)")[0].get_text().strip()
     except IndexError:
-        resolution = rule.select("#sub-header > div > div > div > div.box.text > p")[0].get_text().strip()
         print("Extraction URL: " + url)
+        resolution = \
+        rule.select("#sub-header > div > div > div > div.pt-5.font-thin.font-interstate.text-tm-gray-5 > p")[
+            0].get_text().strip()
     # Get compliance from URL
     compliance_list = [0] * 7
-    compliance = rule.select("#sub-header > div > div > div > div.box.text > ul > li")
+    compliance = rule.select(
+        "#sub-header > div > div > div > div.pt-5.font-thin.font-interstate.text-tm-gray-5 > ul > li")
     for compliance_item in compliance:
         compliance_text = compliance_item.get_text().strip()
         if compliance_text == "The Center of Internet Security AWS Foundations Benchmark":
@@ -76,7 +80,7 @@ for key, link in resolution_link_df[["Resolution Page"]].iterrows():
             compliance_list[PCI_DSS] = 1
         elif compliance_text == "MAS":
             compliance_list[MAS] = 1
-        elif compliance_text == "National Institute of Standards and Technology (NIST)":
+        elif compliance_text == "NIST 800-53 (Rev. 4)":
             compliance_list[NIST] = 1
         elif compliance_text == "Health Insurance Portability and Accountability Act (HIPAA)":
             compliance_list[HIPAA] = 1
